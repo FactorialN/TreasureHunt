@@ -6,6 +6,7 @@
 #define NUM_CUBE_COLORS 144
 #define NUM_GRID_VERTICES 72
 #define NUM_GRID_COLORS 96
+#define NUM_LABY_SIZE 7
 
 #import "TreasureHuntRenderer.h"
 
@@ -65,7 +66,7 @@ static const char* kGridFragmentShaderString =
     "    if ((mod(abs(vGrid.x), 10.0) < 0.1) ||\n"
     "        (mod(abs(vGrid.z), 10.0) < 0.1)) {\n"
     "      gl_FragColor = max(0.0, (90.0-depth) / 90.0) *\n"
-    "                     vec4(1.0, 1.0, 1.0, 1.0) + \n"
+    "                     vec4(0.90, 0.3398, 0.9023, 1.0) + \n"
     "                     min(1.0, depth / 90.0) * vColor;\n"
     "    } else {\n"
     "      gl_FragColor = vColor;\n"
@@ -116,6 +117,16 @@ static const float kCubeVertices[NUM_CUBE_VERTICES] = {
   0.5f, -0.5f, 0.5f,
   -0.5f, -0.5f, 0.5f,
   -0.5f, -0.5f, -0.5f,
+};
+
+static const int labyRinth[NUM_LABY_SIZE*NUM_LABY_SIZE] = {
+    0, 0, 0, 0, 1, 1, 1,
+    1, 0, 1, 0, 0, 0, 1,
+    1, 0, 1, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 1, 1,
+    1, 1, 0, 1, 0, 0, 1,
+    0, 0, 0, 0, 1, 0, 0,
+    1, 1, 1, 0, 0, 0, 0
 };
 
 // Color of the cube's six faces.
@@ -257,30 +268,30 @@ static const float kGridVertices[NUM_GRID_VERTICES] = {
 };
 
 static const float kGridColors[NUM_GRID_COLORS] = {
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
-  0.0f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.0398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
+  0.90f, 0.3398f, 0.9023f, 1.0f,
 };
 
 // Cube size (scale).
@@ -495,7 +506,7 @@ static void CheckGLError(const char *label) {
 
   // Position grid below the camera.
   _grid_position[0] = 0;
-  _grid_position[1] = -20.0f;
+  _grid_position[1] = -0.5f;
   _grid_position[2] = 0;
 
   for (int i = 0; i < NUM_GRID_VERTICES; ++i) {
@@ -596,9 +607,17 @@ static void CheckGLError(const char *label) {
 
   // Set the uniform values that will be used by our shader.
     GLfloat _cur_position[3];
+    for(int i = 0; i < NUM_LABY_SIZE*NUM_LABY_SIZE; i++)
+        if(labyRinth[i] > 0){
+    
+            /*
     _cur_position[0] = _cube_position[0] + _trans_offset[0];
     _cur_position[1] = _cube_position[1] + _trans_offset[1];
     _cur_position[2] = _cube_position[2] + _trans_offset[2];
+             */
+  _cur_position[0] = 0.5 + i%NUM_LABY_SIZE + _trans_offset[0];
+  _cur_position[1] = _trans_offset[1];
+  _cur_position[2] = 0.5 + i/NUM_LABY_SIZE + _trans_offset[2];
   glUniform3fv(_cube_position_uniform, 1, _cur_position);
 
   // Set the uniform matrix values that will be used by our shader.
@@ -623,8 +642,10 @@ static void CheckGLError(const char *label) {
   glDisableVertexAttribArray(_cube_vertex_attrib);
   glDisableVertexAttribArray(_cube_color_attrib);
   CheckGLError("glDrawArrays");
+        }
 
   // Select our shader.
+  
   glUseProgram(_grid_program);
 
   // Set the uniform values that will be used by our shader.
@@ -649,6 +670,7 @@ static void CheckGLError(const char *label) {
   glDrawArrays(GL_TRIANGLES, 0, NUM_GRID_VERTICES / 3);
   glDisableVertexAttribArray(_grid_vertex_attrib);
   glDisableVertexAttribArray(_grid_color_attrib);
+   
 }
 
 
@@ -666,9 +688,15 @@ static void CheckGLError(const char *label) {
   else {
   // TO DO: Implement moving in the scene
       const GLKMatrix4 hm = [headPose headTransform];
-      _trans_offset[0] += hm.m02 * 0.18f;
-      _trans_offset[1] += hm.m12 * 0.18f;
-      _trans_offset[2] += hm.m22 * 0.18f;
+      
+      GLfloat q0 = _trans_offset[0] + hm.m02 * 0.18f;
+      GLfloat q1 = _trans_offset[1] + hm.m12 * 0.18f;
+      GLfloat q2 = _trans_offset[2] + hm.m22 * 0.18f;
+      if (q0<=0&&q2<=0){
+          _trans_offset[0] = q0;
+          if(q1<=0)_trans_offset[1] = q1;
+          _trans_offset[2] = q2;
+      }
       
   }
     return true;
@@ -710,10 +738,11 @@ static void CheckGLError(const char *label) {
 // Returns whether the object is currently on focus.
 - (bool)isLookingAtObject:(const GLKQuaternion *)head_rotation
            sourcePosition:(GLKVector3 *)position {
-  GLKVector3 source_direction = GLKQuaternionRotateVector3(
+    return false;
+  /*GLKVector3 source_direction = GLKQuaternionRotateVector3(
       GLKQuaternionInvert(*head_rotation), *position);
   return ABS(source_direction.v[0]) < kFocusThresholdRadians &&
-         ABS(source_direction.v[1]) < kFocusThresholdRadians;
+         ABS(source_direction.v[1]) < kFocusThresholdRadians;*/
 }
 
 @end
