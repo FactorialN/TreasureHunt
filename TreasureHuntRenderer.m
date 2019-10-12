@@ -371,6 +371,8 @@ static void CheckGLError(const char *label) {
 
 @implementation TreasureHuntRenderer {
   // GL variables for the cube.
+  GLfloat _trans_offset[3];
+    
   GLfloat _cube_vertices[NUM_CUBE_VERTICES];
   GLfloat _cube_position[3];
   GLfloat _cube_colors[NUM_CUBE_COLORS];
@@ -564,6 +566,7 @@ static void CheckGLError(const char *label) {
   CGRect viewport = [headPose viewport];
   glViewport(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
   glScissor(viewport.origin.x, viewport.origin.y, viewport.size.width, viewport.size.height);
+    
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   CheckGLError("glClear");
@@ -592,7 +595,11 @@ static void CheckGLError(const char *label) {
   CheckGLError("glUseProgram");
 
   // Set the uniform values that will be used by our shader.
-  glUniform3fv(_cube_position_uniform, 1, _cube_position);
+    GLfloat _cur_position[3];
+    _cur_position[0] = _cube_position[0] + _trans_offset[0];
+    _cur_position[1] = _cube_position[1] + _trans_offset[1];
+    _cur_position[2] = _cube_position[2] + _trans_offset[2];
+  glUniform3fv(_cube_position_uniform, 1, _cur_position);
 
   // Set the uniform matrix values that will be used by our shader.
   glUniformMatrix4fv(_cube_mvp_matrix, 1, false, model_view_matrix);
@@ -621,7 +628,10 @@ static void CheckGLError(const char *label) {
   glUseProgram(_grid_program);
 
   // Set the uniform values that will be used by our shader.
-  glUniform3fv(_grid_position_uniform, 1, _grid_position);
+    _cur_position[0] = _grid_position[0] + _trans_offset[0];
+    _cur_position[1] = _grid_position[1] + _trans_offset[1];
+    _cur_position[2] = _grid_position[2] + _trans_offset[2];
+  glUniform3fv(_grid_position_uniform, 1, _cur_position);
 
   // Set the uniform matrix values that will be used by our shader.
   glUniformMatrix4fv(_grid_mvp_matrix, 1, false, model_view_matrix);
@@ -642,7 +652,7 @@ static void CheckGLError(const char *label) {
 }
 
 
-- (void)handleTrigger {
+- (BOOL)handleTrigger:(GVRHeadPose *)headPose {
   NSLog(@"User performed trigger action");
   // Check whether the object is found.
   if (_is_cube_focused) {
@@ -653,8 +663,15 @@ static void CheckGLError(const char *label) {
     // Generate the next cube.
     [self spawnCube];
   }
+  else {
   // TO DO: Implement moving in the scene
-    
+      const GLKMatrix4 hm = [headPose headTransform];
+      _trans_offset[0] += hm.m02 * 0.18f;
+      _trans_offset[1] += hm.m12 * 0.18f;
+      _trans_offset[2] += hm.m22 * 0.18f;
+      
+  }
+    return true;
 }
 
 - (void)pause:(BOOL)pause {
