@@ -6,7 +6,7 @@
 #define NUM_CUBE_COLORS 144
 #define NUM_GRID_VERTICES 72
 #define NUM_GRID_COLORS 96
-#define NUM_LABY_SIZE 7
+#define NUM_LABY_SIZE 36
 
 #import "TreasureHuntRenderer.h"
 
@@ -120,13 +120,42 @@ static const float kCubeVertices[NUM_CUBE_VERTICES] = {
 };
 
 static const int labyRinth[NUM_LABY_SIZE*NUM_LABY_SIZE] = {
-    0, 0, 0, 0, 1, 1, 1,
-    1, 0, 1, 0, 0, 0, 1,
-    1, 0, 1, 1, 0, 0, 1,
-    1, 0, 0, 1, 0, 1, 1,
-    1, 1, 0, 1, 0, 0, 1,
-    0, 0, 0, 0, 1, 0, 0,
-    1, 1, 1, 0, 0, 0, 0
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    1,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,
+    0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,
+    0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,
+    0,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,
+    0,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+    0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,0,
+    0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,
+    0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,
+    0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,
+    0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
+    0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
+    0,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,
+    0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,
+    0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,
+    0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,
+    0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,
+    0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,
+    0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,
+    0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+    0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+    0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+    0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+    0,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,
+    0,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
 
 // Color of the cube's six faces.
@@ -424,7 +453,9 @@ static void CheckGLError(const char *label) {
 
 - (void)initializeGl {
   [super initializeGl];
-
+    
+    _trans_offset[0] = -0.4;
+    _trans_offset[2] = -0.4;
   // Renderer must be created on GL thread before any call to drawFrame.
   // Load the vertex/fragment shaders.
   const GLuint vertex_shader = LoadShader(GL_VERTEX_SHADER, kVertexShaderString);
@@ -551,6 +582,29 @@ static void CheckGLError(const char *label) {
 }
 
 - (void)update:(GVRHeadPose *)headPose {
+    const GLKMatrix4 hm = [headPose headTransform];
+    
+    GLfloat q0 = _trans_offset[0] + hm.m02 * 0.015f;
+    GLfloat q1 = _trans_offset[1] + hm.m12 * 0.015f;
+    GLfloat q2 = _trans_offset[2] + hm.m22 * 0.015f;
+    GLfloat xx = -q0, yy = -q2;
+    int x = floor(xx), y = floor(yy);
+    float dx = xx - x, dy = yy - y;
+    bool tg = true;
+    if (dx < 0.20 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))tg=false;
+    if (dy < 0.20 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))tg=false;
+    if (dx > 0.8 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))tg=false;
+    if (dy > 0.8 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))tg=false;
+    if (dx < 0.20 && dy < 0.20 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE]))tg=false;
+    if (dx < 0.20 && dy > 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))tg=false;
+    if (dx > 0.8 && dy < 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))tg=false;
+    if (dx > 0.8 && dy > 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))tg=false;
+    if (tg){
+        _trans_offset[0] = q0;
+        if(q1<=0)_trans_offset[1] = q1;
+        _trans_offset[2] = q2;
+    }
+    
   // Update audio listener's head rotation.
   const GLKQuaternion head_rotation =
       GLKQuaternionMakeWithMatrix4(GLKMatrix4Transpose([headPose headTransform]));
@@ -607,17 +661,18 @@ static void CheckGLError(const char *label) {
 
   // Set the uniform values that will be used by our shader.
     GLfloat _cur_position[3];
-    for(int i = 0; i < NUM_LABY_SIZE*NUM_LABY_SIZE; i++)
-        if(labyRinth[i] > 0){
+    for(int i = -1; i <= NUM_LABY_SIZE; i++)
+        for(int j = -1; j <= NUM_LABY_SIZE; j++)
+        if(i<0||j<0||i==NUM_LABY_SIZE||j==NUM_LABY_SIZE||labyRinth[i+j*NUM_LABY_SIZE] > 0){
     
             /*
     _cur_position[0] = _cube_position[0] + _trans_offset[0];
     _cur_position[1] = _cube_position[1] + _trans_offset[1];
     _cur_position[2] = _cube_position[2] + _trans_offset[2];
              */
-  _cur_position[0] = 0.5 + i%NUM_LABY_SIZE + _trans_offset[0];
+  _cur_position[0] = 0.5 + i + _trans_offset[0];
   _cur_position[1] = _trans_offset[1];
-  _cur_position[2] = 0.5 + i/NUM_LABY_SIZE + _trans_offset[2];
+  _cur_position[2] = 0.5 + j + _trans_offset[2];
   glUniform3fv(_cube_position_uniform, 1, _cur_position);
 
   // Set the uniform matrix values that will be used by our shader.
@@ -692,7 +747,19 @@ static void CheckGLError(const char *label) {
       GLfloat q0 = _trans_offset[0] + hm.m02 * 0.18f;
       GLfloat q1 = _trans_offset[1] + hm.m12 * 0.18f;
       GLfloat q2 = _trans_offset[2] + hm.m22 * 0.18f;
-      if (q0<=0&&q2<=0){
+      GLfloat xx = -q0, yy = -q2;
+      int x = floor(xx), y = floor(yy);
+      float dx = xx - x, dy = yy - y;
+      bool tg = true;
+      if (dx < 0.15 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))tg=false;
+      if (dy < 0.15 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))tg=false;
+      if (dx > 0.85 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))tg=false;
+      if (dy > 0.85 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))tg=false;
+      if (dx < 0.15 && dy < 0.15 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE]))tg=false;
+      if (dx < 0.15 && dy > 0.85 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))tg=false;
+      if (dx > 0.85 && dy < 0.15 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))tg=false;
+      if (dx > 0.85 && dy > 0.85 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))tg=false;
+      if (tg){
           _trans_offset[0] = q0;
           if(q1<=0)_trans_offset[1] = q1;
           _trans_offset[2] = q2;
