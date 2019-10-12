@@ -514,11 +514,11 @@ static void CheckGLError(const char *label) {
   glBufferData(GL_ARRAY_BUFFER, sizeof(_grid_colors), _grid_colors, GL_STATIC_DRAW);
 
   // Initialize GVRCardboardAudio engine.
-  /*_gvr_audio_engine =
+  _gvr_audio_engine =
       [[GVRAudioEngine alloc] initWithRenderingMode:kRenderingModeBinauralHighQuality];
   [_gvr_audio_engine preloadSoundFile:kObjectSoundFile];
   [_gvr_audio_engine preloadSoundFile:kSuccessSoundFile];
-  [_gvr_audio_engine start];*/
+  [_gvr_audio_engine start];
 
   // Generate seed for random number generation.
   srand48(time(0));
@@ -584,6 +584,8 @@ static void CheckGLError(const char *label) {
   CheckGLError("render");
 }
 
+
+
 - (void)renderWithModelViewProjectionMatrix:(const float *)model_view_matrix {
   // Select our shader.
   glUseProgram(_cube_program);
@@ -639,6 +641,7 @@ static void CheckGLError(const char *label) {
   glDisableVertexAttribArray(_grid_color_attrib);
 }
 
+
 - (void)handleTrigger {
   NSLog(@"User performed trigger action");
   // Check whether the object is found.
@@ -650,6 +653,8 @@ static void CheckGLError(const char *label) {
     // Generate the next cube.
     [self spawnCube];
   }
+  // TO DO: Implement moving in the scene
+    
 }
 
 - (void)pause:(BOOL)pause {
