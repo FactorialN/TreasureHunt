@@ -619,23 +619,46 @@ static void CheckGLError(const char *label) {
     GLfloat q2 = _trans_offset[2] + hm.m22 * velocity;
     GLfloat xx = -q0, yy = -q2;
     int x = floor(xx), y = floor(yy);
-    float dx = xx - x, dy = yy - y;
-    bool tg = true;
-    if(_trans_offset[1]>-1.5f){
-        if (dx < 0.20 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))tg=false;
-        if (dy < 0.20 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))tg=false;
-        if (dx > 0.8 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))tg=false;
-        if (dy > 0.8 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))tg=false;
-        if (dx < 0.20 && dy < 0.20 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE]))tg=false;
-        if (dx < 0.20 && dy > 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))tg=false;
-        if (dx > 0.8 && dy < 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))tg=false;
-        if (dx > 0.8 && dy > 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))tg=false;
+    float dx = xx - x, dy = yy - y, ddx = -_trans_offset[0]-x, ddy = -_trans_offset[2]-y;
+    bool tg1 = true, tg2 = true, tg0 = true;
+    if(_trans_offset[1]>-1.3f){
+        if (dx <= 0.20 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))tg0=false;
+        if (dy <= 0.20 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))tg2=false;
+        if (dx >= 0.8 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))tg0=false;
+        if (dy >= 0.8 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))tg2=false;
+        if (dx <= 0.20 && dy <= 0.20 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE])){
+            if(ddy <= 0.20)tg0=false;
+            else tg2=false;
+        }
+        if (dx <= 0.20 && dy >= 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE])){
+            if(ddy >= 0.8)tg0=false;
+            else tg2=false;
+        }
+        if (dx >= 0.8 && dy <= 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE])){
+            if(ddy <= 0.20)tg0=false;
+            else tg2=false;
+        }
+        if (dx >= 0.8 && dy >= 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE])){
+            if(ddy >= 0.8)tg0=false;
+            else tg2=false;
+        }
+        if(q1>0)tg1=false;
     }
-    if (tg){
-        _trans_offset[0] = q0;
-        if(q1<=0)_trans_offset[1] = q1;
-        _trans_offset[2] = q2;
+    else{
+        bool ttg = true;
+        if (dx <= 0.20 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))ttg = false;
+        if (dy <= 0.20 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))ttg = false;
+        if (dx >= 0.8 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))ttg = false;
+        if (dy >= 0.8 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))ttg = false;
+        if (dx <= 0.20 && dy <= 0.20 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE]))ttg = false;
+        if (dx <= 0.20 && dy >= 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))ttg = false;
+        if (dx >= 0.8 && dy <= 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))ttg = false;
+        if (dx >= 0.8 && dy >= 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))ttg = false;
+        if (!ttg && q1 >= -1.3f)q1 = 1.3f;
     }
+    if (tg0)_trans_offset[0] = q0;
+    if (tg1)_trans_offset[1] = q1;
+    if (tg2)_trans_offset[2] = q2;
     
   // Update audio listener's head rotation.
   const GLKQuaternion head_rotation =
@@ -765,7 +788,8 @@ static void CheckGLError(const char *label) {
 - (BOOL)handleTrigger:(GVRHeadPose *)headPose {
   NSLog(@"User performed trigger action");
   // Check whether the object is found.
-    if(velocity < 0.03f) velocity = 0.04f;
+    if(velocity > 0.01f && velocity < 0.03f) velocity = 0.04f;
+    else if(velocity > 0.03f) velocity = 0;
     else velocity = 0.015f;
   if (_is_cube_focused) {
      _success_source_id = [_gvr_audio_engine createStereoSound:kSuccessSoundFile];
@@ -774,34 +798,6 @@ static void CheckGLError(const char *label) {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     // Generate the next cube.
     [self spawnCube];
-  }
-  else {
-  // TO DO: Implement moving in the scene
-      const GLKMatrix4 hm = [headPose headTransform];
-      
-      GLfloat q0 = _trans_offset[0] + hm.m02 * 0.18f;
-      GLfloat q1 = _trans_offset[1] + hm.m12 * 0.18f;
-      GLfloat q2 = _trans_offset[2] + hm.m22 * 0.18f;
-      GLfloat xx = -q0, yy = -q2;
-      int x = floor(xx), y = floor(yy);
-      float dx = xx - x, dy = yy - y;
-      bool tg = true;
-      if(_trans_offset[1]>-1.5f){
-          if (dx < 0.20 && (x==0||(x>0&&labyRinth[x-1+y*NUM_LABY_SIZE])))tg=false;
-          if (dy < 0.20 && (y==0||(y>0&&labyRinth[x+(y-1)*NUM_LABY_SIZE])))tg=false;
-          if (dx > 0.8 && (x==NUM_LABY_SIZE-1||(x<NUM_LABY_SIZE-1&&labyRinth[x+1+y*NUM_LABY_SIZE])))tg=false;
-          if (dy > 0.8 && (y==NUM_LABY_SIZE-1||(y<NUM_LABY_SIZE-1&&labyRinth[x+(y+1)*NUM_LABY_SIZE])))tg=false;
-          if (dx < 0.20 && dy < 0.20 && (x>0&&y>0&&labyRinth[x-1+(y-1)*NUM_LABY_SIZE]))tg=false;
-          if (dx < 0.20 && dy > 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))tg=false;
-          if (dx > 0.8 && dy < 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))tg=false;
-          if (dx > 0.8 && dy > 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))tg=false;
-      }
-      if (tg){
-          _trans_offset[0] = q0;
-          if(q1<=0)_trans_offset[1] = q1;
-          _trans_offset[2] = q2;
-      }
-      
   }
     return true;
 }
