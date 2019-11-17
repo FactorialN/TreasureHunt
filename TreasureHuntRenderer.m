@@ -375,7 +375,7 @@ static const float kMaxCubeElevationRadians = 0.25f * M_PI;
 static const float kFocusThresholdRadians = 0.5f;
 
 // Sample sound file names.
-static const NSString *kObjectSoundFile = @"cube_sound.wav";
+static const NSString *kObjectSoundFile = @"cube_sound-3.wav";
 static const NSString *kSuccessSoundFile = @"success.wav";
 
 static GLuint LoadShader(GLenum type, const char *shader_src) {
@@ -590,7 +590,7 @@ static void CheckGLError(const char *label) {
   // Initialize GVRCardboardAudio engine.
   _gvr_audio_engine =
       [[GVRAudioEngine alloc] initWithRenderingMode:kRenderingModeBinauralHighQuality];
-  [_gvr_audio_engine preloadSoundFile:kObjectSoundFile];
+  bool filePreloaded = [_gvr_audio_engine preloadSoundFile:kObjectSoundFile];
   [_gvr_audio_engine preloadSoundFile:kSuccessSoundFile];
   [_gvr_audio_engine start];
 
@@ -598,8 +598,11 @@ static void CheckGLError(const char *label) {
   srand48(time(0));
 
   // Spawn the first cube.
+    printf("Sound Preload: %d\n", filePreloaded);
   _sound_object_id = [_gvr_audio_engine createSoundObject:kObjectSoundFile];
-
+    
+    //_sound_object_id = [_gvr_audio_engine createStereoSound:kObjectSoundFile];
+    printf("Sound Object ID: %d\n", _sound_object_id);
   [self spawnCube];
   CheckGLError("init");
 }
@@ -654,11 +657,20 @@ static void CheckGLError(const char *label) {
         if (dx <= 0.20 && dy >= 0.8 && (x>0&&y<NUM_LABY_SIZE-1&&labyRinth[x-1+(y+1)*NUM_LABY_SIZE]))ttg = false;
         if (dx >= 0.8 && dy <= 0.20 && (x<NUM_LABY_SIZE-1&&y>0&&labyRinth[x+1+(y-1)*NUM_LABY_SIZE]))ttg = false;
         if (dx >= 0.8 && dy >= 0.8 && (x<NUM_LABY_SIZE-1&&y<NUM_LABY_SIZE-1&&labyRinth[x+1+(y+1)*NUM_LABY_SIZE]))ttg = false;
-        if (!ttg && q1 >= -1.3f)q1 = 1.3f;
+        if (!ttg && q1 >= -1.3f)q1 = -1.3f;
     }
     if (tg0)_trans_offset[0] = q0;
     if (tg1)_trans_offset[1] = q1;
     if (tg2)_trans_offset[2] = q2;
+    
+  [_gvr_audio_engine setSoundObjectPosition:_sound_object_id
+                                          x:_trans_offset[0]+_cube_position[0]
+                                          y:_trans_offset[1]+_cube_position[1]
+                                          z:_trans_offset[2]+_cube_position[2]];
+    
+    float cubex0 = _trans_offset[0]+_cube_position[0], cubex1 = _trans_offset[1]+_cube_position[1], cubex2 = _trans_offset[2]+_cube_position[2];
+    float vol = fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
+    [_gvr_audio_engine setSoundVolume:_sound_object_id volume:vol];
     
   // Update audio listener's head rotation.
   const GLKQuaternion head_rotation =
@@ -672,7 +684,7 @@ static void CheckGLError(const char *label) {
 
   // Check if the cube is focused.
   GLKVector3 source_cube_position =
-      GLKVector3Make(_cube_position[0], _cube_position[1], _cube_position[2]);
+      GLKVector3Make(_cube_position[0]+_trans_offset[0], _cube_position[1]+_trans_offset[1], _cube_position[2]+_trans_offset[2]);
   _is_cube_focused = [self isLookingAtObject:&head_rotation sourcePosition:&source_cube_position];
 
   // Clear GL viewport.
@@ -735,11 +747,9 @@ static void CheckGLError(const char *label) {
   glUniformMatrix4fv(_cube_mvp_matrix, 1, false, model_view_matrix);
 
   // Set the cube colors.
-  if (_is_cube_focused) {
-    glBindBuffer(GL_ARRAY_BUFFER, _cube_found_color_buffer);
-  } else {
+  
     glBindBuffer(GL_ARRAY_BUFFER, _cube_color_buffer);
-  }
+  
   CheckGLError("glBindBuffer");
   glVertexAttribPointer(_cube_color_attrib, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
   glEnableVertexAttribArray(_cube_color_attrib);
@@ -754,6 +764,39 @@ static void CheckGLError(const char *label) {
   glDisableVertexAttribArray(_cube_color_attrib);
   CheckGLError("glDrawArrays");
         }
+
+    glUseProgram(_cube_program);
+    CheckGLError("glUseProgram");
+    
+    _cur_position[0] = _cube_position[0] + _trans_offset[0];
+    _cur_position[1] = _cube_position[1] + _trans_offset[1];
+    _cur_position[2] = _cube_position[2] + _trans_offset[2];
+
+    // Set the uniform values that will be used by our shader.
+    glUniform3fv(_cube_position_uniform, 1, _cur_position);
+
+    // Set the uniform matrix values that will be used by our shader.
+    glUniformMatrix4fv(_cube_mvp_matrix, 1, false, model_view_matrix);
+
+    // Set the cube colors.
+    if (_is_cube_focused) {
+      glBindBuffer(GL_ARRAY_BUFFER, _cube_found_color_buffer);
+    } else {
+      glBindBuffer(GL_ARRAY_BUFFER, _cube_color_buffer);
+    }
+    CheckGLError("glBindBuffer");
+    glVertexAttribPointer(_cube_color_attrib, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+    glEnableVertexAttribArray(_cube_color_attrib);
+
+    // Draw our polygons.
+    glBindBuffer(GL_ARRAY_BUFFER, _cube_vertex_buffer);
+    glVertexAttribPointer(_cube_vertex_attrib, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 3, 0);
+    glEnableVertexAttribArray(_cube_vertex_attrib);
+    glDrawArrays(GL_TRIANGLES, 0, NUM_CUBE_VERTICES / 3);
+    glDisableVertexAttribArray(_cube_vertex_attrib);
+    glDisableVertexAttribArray(_cube_color_attrib);
+    CheckGLError("glDrawArrays");
 
   // Select our shader.
   
@@ -788,16 +831,19 @@ static void CheckGLError(const char *label) {
 - (BOOL)handleTrigger:(GVRHeadPose *)headPose {
   NSLog(@"User performed trigger action");
   // Check whether the object is found.
-    if(velocity > 0.01f && velocity < 0.03f) velocity = 0.04f;
-    else if(velocity > 0.03f) velocity = 0;
-    else velocity = 0.015f;
+    
   if (_is_cube_focused) {
      _success_source_id = [_gvr_audio_engine createStereoSound:kSuccessSoundFile];
     [_gvr_audio_engine playSound:_success_source_id loopingEnabled:false];
     // Vibrate the device on success.
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     // Generate the next cube.
     [self spawnCube];
+  }
+  else{
+      if(velocity > 0.01f && velocity < 0.03f) velocity = 0.04f;
+      else if(velocity > 0.03f) velocity = 0;
+      else velocity = 0.015f;
   }
     return true;
 }
@@ -815,11 +861,22 @@ static void CheckGLError(const char *label) {
 // Spawns the next cube at a new position.
 - (void)spawnCube {
   // Set the new position and restart the playback.
+    NSLog(@"New Cube generated");
   [self setRandomCubePosition:kMinCubeDistance maxLimit:kMaxCubeDistance];
+    
+    //_sound_object_id = [_gvr_audio_engine createStereoSound:kObjectSoundFile];
+    printf("%d\n", _sound_object_id);
+    /*if([_gvr_audio_engine isSoundPlaying:_sound_object_id]){
+        NSLog(@"New Cube generated");
+        [_gvr_audio_engine stopSound: _sound_object_id];
+    }*/
   [_gvr_audio_engine setSoundObjectPosition:_sound_object_id
-                                          x:_cube_position[0]
-                                          y:_cube_position[1]
-                                          z:_cube_position[2]];
+                                          x:_trans_offset[0]+_cube_position[0]
+                                          y:_trans_offset[1]+_cube_position[1]
+                                          z:_trans_offset[2]+_cube_position[2]];
+    float cubex0 = _trans_offset[0]+_cube_position[0], cubex1 = _trans_offset[1]+_cube_position[1], cubex2 = _trans_offset[2]+_cube_position[2];
+    float vol = fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
+    [_gvr_audio_engine setSoundVolume:_sound_object_id volume:vol];
   [_gvr_audio_engine playSound:_sound_object_id loopingEnabled:true];
 }
 
@@ -831,18 +888,18 @@ static void CheckGLError(const char *label) {
   const float elevation = (float)(2.0 * drand48() * kMaxCubeElevationRadians) -
                           kMaxCubeElevationRadians;
   _cube_position[0] = -cos(elevation) * sin(azimuth) * distance;
-  _cube_position[1] = sin(elevation) * distance;
+  _cube_position[1] = fmaxf(sin(elevation) * distance, 0.5f);
   _cube_position[2] = -cos(elevation) * cos(azimuth) * distance;
 }
 
 // Returns whether the object is currently on focus.
 - (bool)isLookingAtObject:(const GLKQuaternion *)head_rotation
            sourcePosition:(GLKVector3 *)position {
-    return false;
-  /*GLKVector3 source_direction = GLKQuaternionRotateVector3(
+    //return false;
+  GLKVector3 source_direction = GLKQuaternionRotateVector3(
       GLKQuaternionInvert(*head_rotation), *position);
   return ABS(source_direction.v[0]) < kFocusThresholdRadians &&
-         ABS(source_direction.v[1]) < kFocusThresholdRadians;*/
+         ABS(source_direction.v[1]) < kFocusThresholdRadians;
 }
 
 @end

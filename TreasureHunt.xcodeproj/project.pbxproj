@@ -8,20 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		122508B41C99FFC50092EC1B /* TreasureHuntRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 122508B31C99FFC50092EC1B /* TreasureHuntRenderer.m */; };
-		125D19BC1D875307003B793D /* cube_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 125D19BA1D875307003B793D /* cube_sound.wav */; };
-		125D19BD1D875307003B793D /* success.wav in Resources */ = {isa = PBXBuildFile; fileRef = 125D19BB1D875307003B793D /* success.wav */; };
 		12BEE9C01C8F5426002F8361 /* TreasureHuntAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 12BEE9B91C8F5426002F8361 /* TreasureHuntAppDelegate.m */; };
 		12BEE9C31C8F5426002F8361 /* TreasureHuntViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12BEE9BF1C8F5426002F8361 /* TreasureHuntViewController.m */; };
 		12BEE9C81C8F546B002F8361 /* launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12BEE9C61C8F546B002F8361 /* launch.xib */; };
 		12BEE9CB1C8F54B8002F8361 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 12BEE9CA1C8F54B8002F8361 /* main.m */; };
 		7F4985A0A39BE38ED6C33077 /* libPods-TreasureHunt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39BAEF6D85B63CF27DB32567 /* libPods-TreasureHunt.a */; };
+		EE591D9F2380FD7200A562B1 /* cboard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EE591D9E2380FD7200A562B1 /* cboard.jpg */; };
+		EE591DA32381708500A562B1 /* cube_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = EE591DA22381708500A562B1 /* cube_sound.wav */; };
+		EE591DA5238170A600A562B1 /* success.wav in Resources */ = {isa = PBXBuildFile; fileRef = EE591DA4238170A600A562B1 /* success.wav */; };
+		EE591DA723818AC800A562B1 /* cube_sound-2.wav in Resources */ = {isa = PBXBuildFile; fileRef = EE591DA623818AC800A562B1 /* cube_sound-2.wav */; };
+		EE591DA923818D2E00A562B1 /* cube_sound-3.wav in Resources */ = {isa = PBXBuildFile; fileRef = EE591DA823818D2E00A562B1 /* cube_sound-3.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		122508B21C99FFC50092EC1B /* TreasureHuntRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreasureHuntRenderer.h; sourceTree = SOURCE_ROOT; };
 		122508B31C99FFC50092EC1B /* TreasureHuntRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreasureHuntRenderer.m; sourceTree = SOURCE_ROOT; };
-		125D19BA1D875307003B793D /* cube_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cube_sound.wav; sourceTree = SOURCE_ROOT; };
-		125D19BB1D875307003B793D /* success.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = success.wav; sourceTree = SOURCE_ROOT; };
 		12BEE99E1C8F53AB002F8361 /* TreasureHunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TreasureHunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12BEE9B81C8F5426002F8361 /* TreasureHuntAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreasureHuntAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		12BEE9B91C8F5426002F8361 /* TreasureHuntAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreasureHuntAppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -33,6 +34,11 @@
 		39BAEF6D85B63CF27DB32567 /* libPods-TreasureHunt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TreasureHunt.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81A057EA76B41D29276B3FFF /* Pods-TreasureHunt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TreasureHunt.debug.xcconfig"; path = "Target Support Files/Pods-TreasureHunt/Pods-TreasureHunt.debug.xcconfig"; sourceTree = "<group>"; };
 		CC79ABB0965F8C5915ADC85B /* Pods-TreasureHunt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TreasureHunt.release.xcconfig"; path = "Target Support Files/Pods-TreasureHunt/Pods-TreasureHunt.release.xcconfig"; sourceTree = "<group>"; };
+		EE591D9E2380FD7200A562B1 /* cboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cboard.jpg; sourceTree = "<group>"; };
+		EE591DA22381708500A562B1 /* cube_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cube_sound.wav; sourceTree = "<group>"; };
+		EE591DA4238170A600A562B1 /* success.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = success.wav; path = ../../../../../Downloads/success.wav; sourceTree = "<group>"; };
+		EE591DA623818AC800A562B1 /* cube_sound-2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "cube_sound-2.wav"; sourceTree = "<group>"; };
+		EE591DA823818D2E00A562B1 /* cube_sound-3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "cube_sound-3.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,16 +74,19 @@
 		12BEE9A01C8F53AB002F8361 /* TreasureHunt */ = {
 			isa = PBXGroup;
 			children = (
-				125D19BA1D875307003B793D /* cube_sound.wav */,
-				125D19BB1D875307003B793D /* success.wav */,
 				12BEE9C61C8F546B002F8361 /* launch.xib */,
+				EE591DA4238170A600A562B1 /* success.wav */,
 				12BEE9B81C8F5426002F8361 /* TreasureHuntAppDelegate.h */,
 				12BEE9B91C8F5426002F8361 /* TreasureHuntAppDelegate.m */,
+				EE591DA22381708500A562B1 /* cube_sound.wav */,
+				EE591DA623818AC800A562B1 /* cube_sound-2.wav */,
+				EE591DA823818D2E00A562B1 /* cube_sound-3.wav */,
 				122508B21C99FFC50092EC1B /* TreasureHuntRenderer.h */,
 				122508B31C99FFC50092EC1B /* TreasureHuntRenderer.m */,
 				12BEE9BE1C8F5426002F8361 /* TreasureHuntViewController.h */,
 				12BEE9BF1C8F5426002F8361 /* TreasureHuntViewController.m */,
 				12BEE9C41C8F5432002F8361 /* TreasureHunt-Info.plist */,
+				EE591D9E2380FD7200A562B1 /* cboard.jpg */,
 				12BEE9A11C8F53AB002F8361 /* Supporting Files */,
 			);
 			path = TreasureHunt;
@@ -168,9 +177,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE591DA5238170A600A562B1 /* success.wav in Resources */,
+				EE591DA923818D2E00A562B1 /* cube_sound-3.wav in Resources */,
+				EE591DA32381708500A562B1 /* cube_sound.wav in Resources */,
+				EE591D9F2380FD7200A562B1 /* cboard.jpg in Resources */,
+				EE591DA723818AC800A562B1 /* cube_sound-2.wav in Resources */,
 				12BEE9C81C8F546B002F8361 /* launch.xib in Resources */,
-				125D19BD1D875307003B793D /* success.wav in Resources */,
-				125D19BC1D875307003B793D /* cube_sound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
