@@ -669,7 +669,11 @@ static void CheckGLError(const char *label) {
                                           z:_trans_offset[2]+_cube_position[2]];
     
     float cubex0 = _trans_offset[0]+_cube_position[0], cubex1 = _trans_offset[1]+_cube_position[1], cubex2 = _trans_offset[2]+_cube_position[2];
-    float vol = fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
+    float rat = 1.0f;
+    if(_cube_position[1] < 1.3f && _trans_offset[1] > -1.3f){
+        rat = 0.6f;
+    }
+    float vol = rat * fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
     [_gvr_audio_engine setSoundVolume:_sound_object_id volume:vol];
     
   // Update audio listener's head rotation.
@@ -832,19 +836,24 @@ static void CheckGLError(const char *label) {
   NSLog(@"User performed trigger action");
   // Check whether the object is found.
     
-  if (_is_cube_focused) {
-     _success_source_id = [_gvr_audio_engine createStereoSound:kSuccessSoundFile];
-    [_gvr_audio_engine playSound:_success_source_id loopingEnabled:false];
-    // Vibrate the device on success.
-    //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    // Generate the next cube.
-    [self spawnCube];
+  
+  
+  if(velocity > 0.01f && velocity < 0.03f) velocity = 0.04f;
+  else if(velocity > 0.03f) velocity = 0;
+  else {
+      if (_is_cube_focused) {
+         _success_source_id = [_gvr_audio_engine createStereoSound:kSuccessSoundFile];
+        [_gvr_audio_engine playSound:_success_source_id loopingEnabled:false];
+        // Vibrate the device on success.
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+        // Generate the next cube.
+        [self spawnCube];
+      }
+      else{
+      velocity = 0.015f;
+      }
   }
-  else{
-      if(velocity > 0.01f && velocity < 0.03f) velocity = 0.04f;
-      else if(velocity > 0.03f) velocity = 0;
-      else velocity = 0.015f;
-  }
+  
     return true;
 }
 
@@ -875,7 +884,11 @@ static void CheckGLError(const char *label) {
                                           y:_trans_offset[1]+_cube_position[1]
                                           z:_trans_offset[2]+_cube_position[2]];
     float cubex0 = _trans_offset[0]+_cube_position[0], cubex1 = _trans_offset[1]+_cube_position[1], cubex2 = _trans_offset[2]+_cube_position[2];
-    float vol = fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
+    float rat = 1.0f;
+    if(_cube_position[1] < 1.3f && _trans_offset[1] > -1.3f){
+        rat = 0.6f;
+    }
+    float vol = rat * fminf(5.0f, 5.0f/sqrt(sqrt((cubex0*cubex0+cubex1*cubex1+cubex2*cubex2))));
     [_gvr_audio_engine setSoundVolume:_sound_object_id volume:vol];
   [_gvr_audio_engine playSound:_sound_object_id loopingEnabled:true];
 }

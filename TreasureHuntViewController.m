@@ -37,10 +37,11 @@
   GVRRendererViewController *viewController =
       [[GVRRendererViewController alloc] initWithRenderer:renderer];
   viewController.delegate = self;
-  viewController.view.frame = CGRectMake(20, 50, self.view.bounds.size.width - 40, 200);
+  viewController.view.frame = CGRectMake(20, 50, self.view.bounds.size.width - 40, 300);
   viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
   [self.view addSubview:viewController.view];
   [self addChildViewController:viewController];
+  
 }
 
 #pragma mark - GVRRendererViewControllerDelegate
